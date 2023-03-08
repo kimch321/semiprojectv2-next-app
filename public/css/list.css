@@ -1,0 +1,17 @@
+.board { width: 700px; margin: 0 auto;
+    table-layout: fixed; border-collapse: collapse }
+
+.board td { text-align: center; padding: 7px }
+.board td:nth-child(2) { white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis }
+.board th { padding:7px;
+    background: lightgoldenrodyellow }
+.board tr:nth-child(odd) { background: #e4f7ba }
+.board tr:nth-child(even) { background: #cef279 }
+.alignrgt { text-align-last: right }
+
+.pagenation { list-style: none; padding: 0;
+    margin: 0 auto; width: 435px }
+.pagenation li { display: inline-block; padding: 10px; }
+.cpage { font: bold 48px '맑은 고딕'; color: red }
+.prev { color: #cccccc }

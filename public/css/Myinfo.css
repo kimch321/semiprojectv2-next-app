@@ -1,0 +1,6 @@
+.myinfo, .myinfo td { /*border: 1px solid black;*/ }
+.myinfo { border-collapse: collapse; width: 300px;
+    margin: 0 auto; }
+.myinfo td { padding: 7px }
+.myinfo td:first-child { font-weight: bold;
+    text-align: right }

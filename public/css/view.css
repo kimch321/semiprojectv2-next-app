@@ -1,0 +1,7 @@
+#view { width: 700px; margin: 0 auto; }
+label { display: inline-block; width: 110px;
+    text-align: right; font-weight: bold;
+    margin-right: 10px }
+#contents { border: 1px solid #eeeeee;
+    display: inline-block;
+    width: 560px; min-height: 350px }
