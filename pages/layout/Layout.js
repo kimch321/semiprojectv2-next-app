@@ -14,6 +14,7 @@ const Layout = ({children}) => {
                     <link rel="stylesheet" href="/css/project2.css" />
                     <link rel="stylesheet" href="/css/Myinfo.css" />
                     <link rel="stylesheet" href="/css/list.css" />
+                    <link rel="stylesheet" href="/css/view.css" />
                     <title>index</title>
                 </head>
                 <body>
