@@ -1,5 +1,5 @@
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
     const res = await fetch(`http://localhost:3000/api/board/list`);
     const listData = await res.json()
 
@@ -25,13 +25,13 @@ const List = ({listData}) => {
                     <th>조회</th>
                 </tr>
                     {
-                        listData.map((list) => (
-                        <tr>
-                            <td>{list.bno}</td>
-                            <td>{list.title}</td>
-                            <td>{list.userid}</td>
-                            <td>{list.regdate}</td>
-                            <td>{list.views}</td>
+                        listData.map((list,i) => (
+                        <tr key={i}>
+                            <td key={list.bno}>{list.bno}</td>
+                            <td key={list.title}>{list.title}</td>
+                            <td key={list.userid}>{list.userid}</td>
+                            <td key={list.regdate}>{list.regdate}</td>
+                            <td key={list.views}>{list.views}</td>
                         </tr>
                         )
                     )}
