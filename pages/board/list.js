@@ -2,13 +2,12 @@
 export async function getServerSideProps() {
     const res = await fetch(`http://localhost:3000/api/board/list`);
     const listData = await res.json()
-    console.log({listData} === {...listData})
-    return{
-        props: {...listData}
-    }
-}
 
-const List = (props) => {
+    return{props: {listData}}
+}
+// 반드시 배열을 복사해야 하는 것은 아니었다.
+// 넘겨줄때 props를 구조분해 하여서, 편리하게 사용할 수 있다. 이렇게 하면 복잡한 인터페이스를 사용할 필요가 없다.
+const List = ({listData}) => {
     return(
         <main>
             <h2>게시판</h2>
@@ -26,8 +25,7 @@ const List = (props) => {
                     <th>조회</th>
                 </tr>
                     {
-                        Object.values(props)
-                            .map((list) => (
+                        listData.map((list) => (
                         <tr>
                             <td>{list.bno}</td>
                             <td>{list.title}</td>
