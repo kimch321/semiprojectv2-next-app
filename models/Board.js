@@ -85,11 +85,10 @@ class Board {
     }
 
     async selectCount(conn, where) {  // 총 게시물 수 계산
-        let params = [];
         let cnt = -1;   // 결과 저장용
 
         try {
-            cnt = await conn.query(boardsql.selectCount + where, params);
+            cnt = await conn.query(boardsql.selectCount + where);
 
         } catch (e) {
             console.log(e);
