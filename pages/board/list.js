@@ -1,3 +1,7 @@
+import {useState} from "react";
+//import fetch from 'isomorphic-unfetch'
+import axios from 'axios'
+
 const getStpgns = (cpg,alpg) => {
     let stpgn = parseInt((cpg - 1) / 10) * 10 + 1; // 페이지네이션 시작값 계산
     let stpgns = [];
@@ -8,40 +12,94 @@ const getStpgns = (cpg,alpg) => {
             stpgns.push(pgn);
         }
     }
-    return stpgns;
+    return stpgns
+}
+const getPgns = (cpg,alpg) => {
+    let isprev10 = (cpg - 10 > 0);
+    let isnext10 = (cpg + 10 < alpg);
+    let isprev = (cpg - 1 > 0);  // 이전 버튼 표시 여부
+    let isnext = (cpg < alpg);  // 다음 버튼 표시 여부
+    let pgn = {'prev' : cpg - 1, 'next' : cpg + 1,
+        'prev10' : cpg - 10 , 'next10' : cpg + 10,
+        'isprev' : isprev, 'isnext' : isnext,
+        'isprev10' : isprev10 , 'isnext10' : isnext10,
+    }; // 이전 : 현재 페이지 -1, 다음 : 현재 페이지 + 1
+
+    return pgn;
 }
 
 
 export async function getServerSideProps(ctx) {
     let [ cpg, ftype, fkey ] = [ ctx.query.cpg, ctx.query.ftype, ctx.query.fkey ];
 
-    cpg= cpg ? parseInt(cpg) : 1;
-    let params = `cpg=${cpg}`;
-    let url = `http://localhost:3000/api/board/list?${params}`
+    // cpg= cpg ? parseInt(cpg) : 1;
+    cpg = Number(cpg)
+    if(cpg === 0 || isNaN(cpg)) {
+        cpg = 1
+    } else {
+        cpg = cpg
+    }
 
-    const res = await fetch(url);
-    const listData = await res.json()
+
+    let params = `cpg=${cpg}`;
+    if (fkey) params += `&ftype=${ftype}&fkey=${fkey}`
+    let url = `http://localhost:3000/api/board/list?${params}`
+    console.log(url)
+
+
+    // const res = await fetch(url);    // fetch
+    // const listData = await res.json()
+
+    const res = await axios.get(url);    // axios
+    const listData = await res.data;
 
     let alpg = Math.ceil(parseInt(listData.allcnt) / 25);  // 총 페이지수 계산
 
     //페이지네이션 처리 1
     let stpgns = getStpgns(cpg,alpg)
 
+    // 페이지네이션 처리 2
+    let pgn = getPgns(cpg,alpg)
+
     //처리 결과를 boards 객체에 추가
     listData.stpgns = stpgns;
+    listData.pgn = pgn;
 
     return{props: {listData}}
 }
 // 반드시 배열을 복사해야 하는 것은 아니었다.
 // 넘겨줄때 props를 구조분해 하여서, 편리하게 사용할 수 있다. 이렇게 하면 복잡한 인터페이스를 사용할 필요가 없다.
 const List = ({listData}) => {
+    const [ftype, setFtype] = useState('title');
+    const [fkey, setFkey] = useState(undefined);
+
+
+    const handletype = (e) => {
+        setFtype(e.target.value)
+
+    };
+    const handlekey = (e) => {
+        setFkey(e.target.value)
+    };
+    const handlefind = (e) => {
+        if(fkey) location.href=`?ftype=${ftype}&fkey=${fkey}`
+    };
     return(
         <main>
             <h2>게시판</h2>
             <table className="board">
                 <tr>
-                    <td colSpan="5" className="alignrgt">
-                        <button type="button">새글쓰기</button>
+                    <td colSpan="3" className="alignlft">
+                        <select name="ftype" id="ftype" onChange={handletype}>
+                            <option value="title">제 목</option>
+                            <option value="userid">작성자</option>
+                            <option value="contents">본 문</option>
+                        </select>
+                        <input type="text" name="fkey" id="fkey" onChange={handlekey}/>
+                        <button type="button" id="findbtn" onClick={handlefind}>검색하기</button>
+                    </td>
+                    <td colspan="2" class="alignrgt">
+                        <button type="button" id="newbtn">새글쓰기</button>
                     </td>
                 </tr>
                 <tr>
@@ -52,7 +110,7 @@ const List = ({listData}) => {
                     <th>조회</th>
                 </tr>
                     {
-                        listData["boards"].map((list) => (
+                        listData.boards.map((list) => (
                         <tr key={list.bno}>
                             <td key={list.bno}>{list.bno}</td>
                             <td key={list.title}>{list.title}</td>
@@ -65,7 +123,13 @@ const List = ({listData}) => {
             </table>
 
             <ul className="pagenation">
-                <li className="prev">이전</li>
+                {
+                    listData.pgn.isprev10 ? <li><a href={`?cpg=${listData.pgn.prev10}`}>이전10</a></li> : ''
+                }
+                {
+                    listData.pgn.isprev ? <li><a href={`?cpg=${listData.pgn.prev}`}>이전</a></li> : ''
+                }
+
                 {
                     listData.stpgns.map(pgn => (
                         pgn.iscpg ?
@@ -73,7 +137,13 @@ const List = ({listData}) => {
                         <li key={pgn.num}><a href={`?cpg=${pgn.num}`}>{pgn.num}</a></li>
                     ))
                 }
-                <li>다음</li>
+
+                {
+                    listData.pgn.isnext ? <li><a href={`?cpg=${listData.pgn.next}`}>다음</a></li> : ''
+                }
+                {
+                    listData.pgn.isnext10 ? <li><a href={`?cpg=${listData.pgn.next10}`}>다음10</a></li> : ''
+                }
             </ul>
         </main>
     )
