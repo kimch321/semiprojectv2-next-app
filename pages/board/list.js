@@ -61,9 +61,15 @@ export async function getServerSideProps(ctx) {
     // 페이지네이션 처리 2
     let pgn = getPgns(cpg,alpg)
 
-    //처리 결과를 boards 객체에 추가
+    // 검색시 검색관련 질의문자열 생성
+    let qry = fkey ? `&ftype=${ftype}&fkey=${fkey}` : ''
+
+    // 처리 결과를 boards 객체에 추가
     listData.stpgns = stpgns;
     listData.pgn = pgn;
+    listData.qry = qry;
+
+
 
     return{props: {listData}}
 }
@@ -124,25 +130,25 @@ const List = ({listData}) => {
 
             <ul className="pagenation">
                 {
-                    listData.pgn.isprev10 ? <li><a href={`?cpg=${listData.pgn.prev10}`}>이전10</a></li> : ''
+                    listData.pgn.isprev10 ? <li><a href={`?cpg=${listData.pgn.prev10}${listData.qry}`}>이전10</a></li> : ''
                 }
                 {
-                    listData.pgn.isprev ? <li><a href={`?cpg=${listData.pgn.prev}`}>이전</a></li> : ''
+                    listData.pgn.isprev ? <li><a href={`?cpg=${listData.pgn.prev}${listData.qry}`}>이전</a></li> : ''
                 }
 
                 {
                     listData.stpgns.map(pgn => (
                         pgn.iscpg ?
                         <li key={pgn.num} className={'cpage'}>{pgn.num}</li> :
-                        <li key={pgn.num}><a href={`?cpg=${pgn.num}`}>{pgn.num}</a></li>
+                        <li key={pgn.num}><a href={`?cpg=${pgn.num}${listData.qry}`}>{pgn.num}</a></li>
                     ))
                 }
 
                 {
-                    listData.pgn.isnext ? <li><a href={`?cpg=${listData.pgn.next}`}>다음</a></li> : ''
+                    listData.pgn.isnext ? <li><a href={`?cpg=${listData.pgn.next}${listData.qry}`}>다음</a></li> : ''
                 }
                 {
-                    listData.pgn.isnext10 ? <li><a href={`?cpg=${listData.pgn.next10}`}>다음10</a></li> : ''
+                    listData.pgn.isnext10 ? <li><a href={`?cpg=${listData.pgn.next10}${listData.qry}`}>다음10</a></li> : ''
                 }
             </ul>
         </main>
