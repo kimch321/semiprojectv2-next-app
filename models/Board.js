@@ -10,7 +10,7 @@ let boardsql = {
     select1: `select bno, title, userid, date_format(regdate, '%y-%m-%d') as regdate ,views from board`,
     select2: ` order by bno desc limit ?, 25 `,
 
-    selectOne: ' select * from board where bno = :1 ' ,
+    selectOne: ' select * from board where bno = ? ' ,
 
     selectCount : 'select count(bno) cnt from board' ,
 
@@ -100,20 +100,12 @@ class Board {
     async selectOne(bno) {  // 본문조회
         let conn = null;
         let params = [bno];
-        let bds = [];
-
+        let result;
         try {
             conn = await mariadb.makeConn();
-            let result = await conn.query(
+            result = await conn.query(
                 boardsql.selectOne, params);
-            let rs = result.resultSet;
 
-            let row = null;
-            while((row = await rs.getRow())) {
-                let bd = new Board(row.BNO, row.TITLE, row.USERID,
-                    row.REGDATE2, row.CONTENTS, row.VIEWS);
-                bds.push(bd);
-            }
 
             await conn.query(boardsql.viewOne, params);
             await conn.commit();
@@ -124,7 +116,7 @@ class Board {
             await mariadb.closeConn();
         }
 
-        return bds;
+        return result;
     }
 
     async update() {

@@ -1,6 +1,7 @@
 import {useState} from "react";
 //import fetch from 'isomorphic-unfetch'
 import axios from 'axios'
+import Link from "next/link";
 
 const getStpgns = (cpg,alpg) => {
     let stpgn = parseInt((cpg - 1) / 10) * 10 + 1; // 페이지네이션 시작값 계산
@@ -44,7 +45,7 @@ export async function getServerSideProps(ctx) {
     let params = `cpg=${cpg}`;
     if (fkey) params += `&ftype=${ftype}&fkey=${fkey}`
     let url = `http://localhost:3000/api/board/list?${params}`
-    console.log(url)
+
 
 
     // const res = await fetch(url);    // fetch
@@ -68,8 +69,6 @@ export async function getServerSideProps(ctx) {
     listData.stpgns = stpgns;
     listData.pgn = pgn;
     listData.qry = qry;
-
-
 
     return{props: {listData}}
 }
@@ -104,7 +103,7 @@ const List = ({listData}) => {
                         <input type="text" name="fkey" id="fkey" onChange={handlekey}/>
                         <button type="button" id="findbtn" onClick={handlefind}>검색하기</button>
                     </td>
-                    <td colspan="2" class="alignrgt">
+                    <td colSpan="2" className="alignrgt">
                         <button type="button" id="newbtn">새글쓰기</button>
                     </td>
                 </tr>
@@ -119,7 +118,7 @@ const List = ({listData}) => {
                         listData.boards.map((list) => (
                         <tr key={list.bno}>
                             <td key={list.bno}>{list.bno}</td>
-                            <td key={list.title}>{list.title}</td>
+                            <td key={list.title}><Link href={`/board/view?bno=${list.bno}`}>{list.title}</Link></td>
                             <td key={list.userid}>{list.userid}</td>
                             <td key={list.regdate}>{list.regdate}</td>
                             <td key={list.views}>{list.views}</td>
