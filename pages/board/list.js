@@ -1,6 +1,12 @@
 
-export async function getServerSideProps(context) {
-    const res = await fetch(`http://localhost:3000/api/board/list`);
+export async function getServerSideProps(ctx) {
+    let [ cpg, ftype, fkey ] = [ ctx.query.cpg, ctx.query.ftype, ctx.query.fkey ];
+
+    cpg= cpg ? parseInt(cpg) : 1;
+    let params = `cpg=${cpg}`;
+    let url = `http://localhost:3000/api/board/list?${params}`
+
+    const res = await fetch(url);
     const listData = await res.json()
 
     return{props: {listData}}
@@ -25,7 +31,7 @@ const List = ({listData}) => {
                     <th>조회</th>
                 </tr>
                     {
-                        listData.map((list) => (
+                        listData["boards"].map((list) => (
                         <tr key={list.bno}>
                             <td key={list.bno}>{list.bno}</td>
                             <td key={list.title}>{list.title}</td>
