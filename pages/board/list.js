@@ -25,8 +25,8 @@ const List = ({listData}) => {
                     <th>조회</th>
                 </tr>
                     {
-                        listData.map((list,i) => (
-                        <tr key={i}>
+                        listData.map((list) => (
+                        <tr key={list.bno}>
                             <td key={list.bno}>{list.bno}</td>
                             <td key={list.title}>{list.title}</td>
                             <td key={list.userid}>{list.userid}</td>
