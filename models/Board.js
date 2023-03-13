@@ -44,6 +44,9 @@ class Board {
     static newOne(title, userid, contents) {
         return new Board(null,title,userid,null,contents,null);
     }
+    static modifyOne(title, contents, bno) {
+        return new Board(bno,title,null,null,contents,null);
+    }
 
     async insert() {  // 새글쓰기
         let conn = null;
@@ -132,7 +135,7 @@ class Board {
             conn = await mariadb.makeConn();
             let result = await conn.query(boardsql.update, params);
             await conn.commit();
-            if (result.rowsAffected > 0) updatecnt = result.rowsAffected;
+            if (result.affectedRows > 0) updatecnt = result.affectedRows;
         } catch (e) {
             console.log(e);
         } finally {
@@ -151,7 +154,7 @@ class Board {
             conn = await mariadb.makeConn();
             let result = await conn.query(boardsql.delete, params);
             await conn.commit();
-            if (result.rowsAffected > 0) deletecnt = result.rowsAffected;
+            if (result.affectedRows > 0) deletecnt = result.affectedRows;
         } catch (e) {
             console.log(e);
         } finally {

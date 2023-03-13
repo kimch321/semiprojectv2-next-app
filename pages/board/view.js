@@ -9,12 +9,12 @@ export async function getServerSideProps(ctx) {
     let url = `http://localhost:3000/api/board/view?${params}`
 
     const res = await axios.get(url);
-    const viewData = await res.data[0];
+    const board = await res.data[0];
 
-    return {props:{viewData}}
+    return {props:{board}}
 }
 
-const View = ({viewData}) => {
+const View = ({board}) => {
 
     const newOne = () => {
         location.href=`/board/write`
@@ -23,10 +23,10 @@ const View = ({viewData}) => {
         location.href=`/board/list`
     };
     const updateOne = () => {
-        location.href=`/board/update?bno=${viewData.bno}`
+        location.href=`/board/update?bno=${board.bno}`
     };
     const deleteOne = () => {
-        if(confirm('정말 삭제하시겠습니까?')) location.href=`/api/board/delete?bno=${viewData.bno}`
+        if(confirm('정말 삭제하시겠습니까?')) location.href=`/api/board/delete?bno=${board.bno}`
     };
 
     return (
@@ -34,16 +34,16 @@ const View = ({viewData}) => {
                 <h2>게시판 본문</h2>
                 <div id="view">
                     <div><label>제목</label>
-                        <span>{viewData.title}</span></div>
+                        <span>{board.title}</span></div>
 
                     <div><label>작성자</label>
-                        <span>{viewData.userid}</span></div>
+                        <span>{board.userid}</span></div>
 
                     <div><label>작성일</label>
-                        <span>{viewData.regdate}({viewData.views})</span></div>
+                        <span>{board.regdate}({board.views})</span></div>
 
                     <div><label className="drgup">본 문</label>
-                        <span id="contents">{viewData.contents}</span></div>
+                        <span id="contents">{board.contents}</span></div>
 
                     <input type="hidden" id="bno" value="" />
                     <input type="hidden" id="uid" value="" />
