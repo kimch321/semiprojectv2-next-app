@@ -11,7 +11,8 @@ export default async (req, res) => {
         cpg = cpg
     }
 
-    let stnum = (cpg - 1) * ppg + 1;
+    let stnum = (cpg - 1) * ppg;
+    // Oracle : (cpg - 1) * ppg + 1;
 
 
     try{

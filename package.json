@@ -15,10 +15,13 @@
     "next": "10.2.3",
     "oracledb": "^5.5.0",
     "react": "16.14.0",
-    "react-dom": "16.14.0"
+    "react-dom": "16.14.0",
+    "bootstrap": "^5.2.3",
+    "sass": "^1.58.3"
   },
   "devDependencies": {
     "eslint": "7.23.0",
-    "eslint-config-next": "10.2.3"
+    "eslint-config-next": "10.2.3",
+    "bootstrap-icons": "^1.10.3"
   }
 }
