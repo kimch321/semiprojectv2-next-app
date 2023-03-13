@@ -7,7 +7,6 @@ export async function getServerSideProps(ctx) {
 
     let params = `bno=${bno}`
     let url = `http://localhost:3000/api/board/view?${params}`
-    console.log(url)
 
     const res = await axios.get(url);
     const viewData = await res.data[0];
@@ -27,7 +26,7 @@ const View = ({viewData}) => {
         location.href=`/board/update?bno=${viewData.bno}`
     };
     const deleteOne = () => {
-        if(confirm('정말 삭제하시겠습니까?')) location.href=`/board/delete?bno=${viewData.bno}`
+        if(confirm('정말 삭제하시겠습니까?')) location.href=`/api/board/delete?bno=${viewData.bno}`
     };
 
     return (
