@@ -1,6 +1,6 @@
 import axios from "axios";
 import {useState} from "react";
-import {check_captcha} from "../../models/Utills";
+import {check_captcha, handleInput, process_submit} from "../../models/Utills";
 
 export async function getServerSideProps(ctx) {
 
@@ -15,13 +15,6 @@ export async function getServerSideProps(ctx) {
     return {props:{board}}
 }
 
-const process_update = async (data) => {
-    const cnt = fetch('/api/board/update',
-        {method: 'POST', mode:'cors', body: JSON.stringify(data), headers:{'Content-Type': 'application/json'}})
-        .then(res => res.json());
-
-    return (await cnt).cnt;
-};
 
 export default function Update ({board}) {
 
@@ -33,14 +26,12 @@ export default function Update ({board}) {
         if(grecaptcha.getResponse() && check_captcha(grecaptcha.getResponse())) {
             const data ={title:title, contents:contents, bno:bno}
 
-            if(await process_update(data) >0) {
+            if(await process_submit(`/api/board/update`,data) >0) {
                 location.href='/board/view?bno=' + board.bno;
             }
         }
     };
-    const handleInput = (setInput, e) => {
-        setInput(e.target.value);
-    };
+
     return(
         <main>
             <script src="https://www.google.com/recaptcha/api.js" async defer></script>

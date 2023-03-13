@@ -1,20 +1,5 @@
 import {useState} from "react";
-import axios from "axios";
-
-const check_captcha = async (response) => {
-    let url ='/api/board/recaptcha?response=' + response;
-    const data = axios.get(url).then(data => data.data);
-
-    return (await data).success;
-};
-
-const process_write = async (data) => {
-    const cnt = fetch('/api/board/write',
-        {method: 'POST', mode:'cors', body: JSON.stringify(data), headers:{'Content-Type': 'application/json'}})
-        .then(res => res.json());
-
-    return (await cnt).cnt;
-};
+import {check_captcha, handleInput, process_submit} from "../../models/Utills";
 
 export function Write() {
 
@@ -27,18 +12,12 @@ export function Write() {
             
             const data = {title:title,userid:userid,contents:contents}
 
-            if (await process_write(data) > 0) {
+            if (await process_submit('/api/board/write',data) > 0) {
                 location.href='/board/list'
             }
         }
     };
 
-    const handleTitle = (e) => {
-        setTitle(e.target.value)
-    };
-    const handleContents = (e) => {
-        setContents(e.target.value)
-    };
     return(
         <main>
             <script src="https://www.google.com/recaptcha/api.js" async defer></script>
@@ -46,7 +25,7 @@ export function Write() {
                 <h2>게시판 새글쓰기</h2>
                 <form name="write" id="writefrm">
                     <div><label htmlFor="title">제목</label>
-                        <input type="text" name="title" id="title" onChange={handleTitle}/></div>
+                        <input type="text" name="title" id="title" onChange={e => handleInput(setTitle,e)}/></div>
 
                     <div><label htmlFor="uid">작성자</label>
                         <input type="text" name="uid" id="uid"
@@ -54,7 +33,7 @@ export function Write() {
 
                     <div><label htmlFor="contents" className="drgup">본문</label>
                         <textarea name="contents" id="contents"
-                                  rows="7" cols="55" onChange={handleContents}/></div>
+                                  rows="7" cols="55" onChange={e => handleInput(setContents,e)}/></div>
 
                     <div><label></label>
                     <div className="g-recaptcha cap" data-sitekey={'6LdF4OskAAAAAKHR83Hmsj65DVQqjXqe0BiBwFsP'}></div>
