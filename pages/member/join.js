@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {check_captcha, handleInput, process_submit} from "../../models/Utills";
+import {check_captcha, handleInput, hashPassword, process_submit} from "../../models/Utills";
 
 
 
@@ -22,7 +22,9 @@ const Join = () =>{
 
             if(grecaptcha.getResponse() && check_captcha(grecaptcha.getResponse())) {
 
-                const data = {userid:userid,passwd:passwd,name:name,email:email}
+
+                let hshpwd = await hashPassword(passwd)
+                const data = {userid:userid,passwd:hshpwd,name:name,email:email}
 
                 if (await process_submit('/api/member/join',data) > 0){
                     location.href='/'
