@@ -19,7 +19,7 @@ const Join = () =>{
         } else if(name === '') { alert('이름 확인은?')
         } else if(email === '') { alert('이메일은?')
         } else {
-            console.log('handleJoin작동?')
+
             if(grecaptcha.getResponse() && check_captcha(grecaptcha.getResponse())) {
 
                 const data = {userid:userid,passwd:passwd,name:name,email:email}

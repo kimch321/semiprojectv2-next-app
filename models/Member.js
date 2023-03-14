@@ -2,7 +2,7 @@ const mariadb = require('../models/MariaDB');
 
 let membersql = {
     insertsql : ' insert into member (userid,passwd,name,email) values ( ?,?,?,?) ',
-    loginsql : ' select count(userid) cnt from member where userid = ? and passwd = ? ',
+    loginsql : ' select count(userid) cnt, name, email from member where userid = ? and passwd = ? ',
     selectOne: ` select mno,userid,passwd,name,email, date_format(regdate, '%y-%m-%d %H:%i:%s') as regdate from member where userid = ? `
 }
 
@@ -43,6 +43,10 @@ class Member {
             conn = await mariadb.makeConn();
             result = await conn.query(
                 membersql.loginsql, params);
+
+            let {cnt} = result[0]
+            let cntToNumber = Number(cnt)
+            result[0].cnt = cntToNumber
 
         } catch (e) {
             console.log(e);
