@@ -1,41 +1,42 @@
+import axios from "axios";
 
 export async function getServerSideProps(context) {
+    // let userid = context.query.userid
+    let userid = 'test';
+    let url = `http://localhost:3000/api/member/myinfo?userid=${userid}`
+    let res = await axios.get(url)
+    const member = await res.data[0]
 
-    let res = await fetch(`http://localhost:3000/api/member/myinfo`);
-    let userinfo = await res.json()
 
     return {
-        props:{userinfo}
+        props:{member}
     }
 }
 
 
-const MyInfo = ({userinfo}) =>{
+const MyInfo = ({member}) =>{
     return(
         <main>
             <h2>회원정보</h2>
             <table className="myinfo">
-            {userinfo.map((info) =>(
                 <>
                     <tr>
                         <td>아이디</td>
-                        <td>{info.USERID}</td>
+                        <td>{member.userid}</td>
                     </tr>
                     <tr>
                         <td>이름</td>
-                        <td>{info.NAME}</td>
+                        <td>{member.name}</td>
                     </tr>
                     <tr>
                         <td>이메일</td>
-                        <td>{info.EMAIL}</td>
+                        <td>{member.email}</td>
                     </tr>
                     <tr>
                         <td>가입일</td>
-                        <td>{info.REGDATE}</td>
+                        <td>{member.regdate}</td>
                     </tr>
                 </>
-                )
-            )}
         </table>
         </main>
     )
