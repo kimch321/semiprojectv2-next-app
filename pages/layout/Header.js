@@ -5,7 +5,7 @@ import Link from "next/link";
 const Header = () => {
     return(
         <>
-            <header><h1>React 프로젝트 v1</h1></header>
+            <header><h1>NextJS 프로젝트 v1</h1></header>
             <nav>
                 <ul>
                     <li><Link href="/">Home</Link></li>

@@ -1,4 +1,5 @@
 import axios from "axios";
+import {signOut, useSession} from "next-auth/client";
 
 export async function getServerSideProps(context) {
     // let userid = context.query.userid
@@ -15,6 +16,10 @@ export async function getServerSideProps(context) {
 
 
 const MyInfo = ({member}) =>{
+
+    const [session, loading] = useSession()
+    console.log('myinfo -', session?.user?.userid);
+
     return(
         <main>
             <h2>회원정보</h2>
@@ -38,6 +43,9 @@ const MyInfo = ({member}) =>{
                     </tr>
                 </>
         </table>
+
+            {session?.user?.userid ? <button onClick={() => signOut()}>로그아웃하기</button> : <></>}
+
         </main>
     )
 }

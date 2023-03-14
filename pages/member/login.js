@@ -1,6 +1,7 @@
 import {useState} from "react";
 import {handleInput} from "../../models/Utills";
 import axios from "axios";
+import {signIn} from "next-auth/client";
 
 
 const Login = () =>{
@@ -8,13 +9,15 @@ const Login = () =>{
     const [passwd, setPasswd] = useState('')
 
     const handlelogin = async () => {
+        const data = {userid:userid,passwd:passwd};
 
-        let params = `?userid=${userid}&passwd=${passwd}`;
-        let url = `http://localhost:3000/api/member/login${params}`
-        let res = await axios.get(url)
-        const member = await res.data[0]
-        console.log(member)
+        // signIn(인증시 활용할 Credentials id, 인증시 사용할 정보)
+        const res = await signIn('userid-passwd-credentials',{
+            userid,passwd,
+            redirect: true
+        });
 
+        console.log('pg login-',await res.status)
     }
 
     return(

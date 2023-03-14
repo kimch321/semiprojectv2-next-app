@@ -7,6 +7,7 @@ import Credentials from 'next-auth/providers/credentials';
 export default NextAuth({
     providers: [
         Credentials({
+            id: "userid-passwd-credentials",
             name: "userid-passwd-credentials",
             credentials: {
                 userid: { label: "아이디", type: "text" },
@@ -23,12 +24,13 @@ export default NextAuth({
             }
         })
     ],
+    pages: { // 인증에 사용자 정의 로그인 페이지 사용
+      signIn: '/member/login'
+    },
     callbacks: {
         async jwt(token,user,account,profile,isNewUse) {
             console.log('jwt - ', user);
             if(user?.userid) token.userid = user.userid;
-
-
             return token;
         },
         async session(session,userOrToken) {
