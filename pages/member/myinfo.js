@@ -54,9 +54,6 @@ const MyInfo = ({member, session}) =>{
                     </tr>
                 </>
         </table>
-
-            {session?.user?.userid ? <button onClick={() => signOut()}>로그아웃하기</button> : <></>}
-
         </main>
     )
 }
