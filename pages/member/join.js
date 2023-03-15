@@ -1,5 +1,19 @@
 import {useState} from "react";
 import {check_captcha, handleInput, hashPassword, process_submit} from "../../models/Utills";
+import {getSession} from "next-auth/client";
+
+export async function getServerSideProps(context) {
+
+    // 세션 객체 가져오기
+    const sess = await getSession(context);
+    if (sess) { // 로그인 한 경우 myinfo로 보낸다.
+        return {
+            redirect: {permanent: false, destination: '/member/myinfo'},
+            props: {}
+        }
+    }
+    return {props: {}}
+}
 
 
 
@@ -12,7 +26,6 @@ const Join = () =>{
     const [email, setEmail] =useState('');
 
     const handleJoin = async () => {
-        console.log('handleJoin작동?')
         if(userid === '') { alert('아이디는?');
         } else if(passwd === '') { alert('비밀번호는?')
         } else if(rePasswd === '') { alert('비밀번호 확인은?')
