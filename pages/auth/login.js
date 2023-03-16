@@ -1,5 +1,3 @@
-// 경로 : /pages/auth/login.js
-
 import {signIn, signOut, useSession} from "next-auth/client";
 
 const Login = () => {

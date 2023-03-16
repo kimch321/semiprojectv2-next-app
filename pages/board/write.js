@@ -1,31 +1,34 @@
 import {useState} from "react";
-import {check_captcha, handleInput, process_submit} from "../../components/Utils";
+import axios from "axios";
+import { check_captcha, handleInput, process_submit } from '../../components/Utils'
+import Layout from "../../components/layout/Layout";
 
-export function Write() {
+export default function Write() {
 
-    const [title, setTitle] = useState('')
-    const [userid, setUserid] = useState('복고커피')
+    const [title, setTitle] = useState('');
+    const [userid, setUserid] = useState('zzyzzy');
     const [contents, setContents] = useState('');
 
     const handlewrite = async () => {
-        if(grecaptcha.getResponse() && check_captcha(grecaptcha.getResponse())) {
-            
-            const data = {title:title,userid:userid,contents:contents}
-
-            if (await process_submit('/api/board/write',data) > 0) {
-                location.href='/board/list'
+        if (grecaptcha.getResponse()
+            && await check_captcha(grecaptcha.getResponse())) {
+            // 글쓰기 작업 진행
+            const data = {title: title, userid: userid, contents: contents};
+            if (await process_submit('/api/board/write', data) > 0) {
+                location.href = '/board/list';
             }
         }
     };
 
-    return(
+    return (
         <main>
             <script src="https://www.google.com/recaptcha/api.js" async defer></script>
             <div id="main">
                 <h2>게시판 새글쓰기</h2>
                 <form name="write" id="writefrm">
                     <div><label htmlFor="title">제목</label>
-                        <input type="text" name="title" id="title" onChange={e => handleInput(setTitle,e)}/></div>
+                        <input type="text" name="title" id="title"
+                               onChange={e => handleInput(setTitle, e)} /></div>
 
                     <div><label htmlFor="uid">작성자</label>
                         <input type="text" name="uid" id="uid"
@@ -33,10 +36,11 @@ export function Write() {
 
                     <div><label htmlFor="contents" className="drgup">본문</label>
                         <textarea name="contents" id="contents"
-                                  rows="7" cols="55" onChange={e => handleInput(setContents,e)}/></div>
+                                  onChange={e => handleInput(setContents, e)}
+                                  rows="7" cols="55"></textarea></div>
 
                     <div><label></label>
-                    <div className="g-recaptcha cap" data-sitekey={'6LdF4OskAAAAAKHR83Hmsj65DVQqjXqe0BiBwFsP'}></div>
+                        <div className="g-recaptcha cap" data-sitekey="6LdG4OskAAAAAMgMFOSHk_hTcglHx9m1Z9qBuR6y"></div>
                     </div>
 
                     <div><label></label>
@@ -46,8 +50,12 @@ export function Write() {
                 </form>
             </div>
         </main>
-    )
+    );
+
 }
 
-
-export default Write;
+Write.getLayout = (page) => (
+    <Layout meta={{title:'Write'}}>
+        {page}
+    </Layout>
+)

@@ -1,38 +1,37 @@
-import axios from "axios";
 import {useState} from "react";
-import {check_captcha, handleInput, process_submit} from "../../components/Utils";
+import axios from "axios";
+import { check_captcha, process_submit, handleInput } from "../../components/Utils";
+import Layout from "../../components/layout/Layout";
+import List from "./list";
 
 export async function getServerSideProps(ctx) {
+    let bno = ctx.query.bno;
 
-    let bno = ctx.query.bno
-
-    let params = `bno=${bno}`
-    let url = `http://localhost:3000/api/board/view?${params}`
-
+    const url = `http://localhost:3000/api/board/view?bno=${bno}`;
     const res = await axios.get(url);
     const board = await res.data[0];
 
-    return {props:{board}}
+    return { props: {board} }
 }
 
+export default function Update({board}) {
 
-export default function Update ({board}) {
-
-    const [title, setTitle] = useState(board.title)
-    const [bno, setBno] = useState(board.bno)
+    const [title, setTitle] = useState(board.title);
+    const [userid, setUserid] = useState('zzyzzy');
     const [contents, setContents] = useState(board.contents);
 
-    const handleupdate = async() => {
-        if(grecaptcha.getResponse() && check_captcha(grecaptcha.getResponse())) {
-            const data ={title:title, contents:contents, bno:bno}
-
-            if(await process_submit(`/api/board/update`,data) >0) {
-                location.href='/board/view?bno=' + board.bno;
-            }
+    const handleupdate = async () => {
+        if (grecaptcha.getResponse()
+            && await check_captcha(grecaptcha.getResponse())) {
+            let data = {bno: board.bno, title: title, contents: contents};
+            if ((await process_submit('/api/board/update', data)).cnt > 0)
+                location.href = '/board/view?bno=' + board.bno;
+        } else {
+            alert('!!!');
         }
     };
 
-    return(
+    return (
         <main>
             <script src="https://www.google.com/recaptcha/api.js" async defer></script>
             <div id="main">
@@ -40,19 +39,20 @@ export default function Update ({board}) {
                 <form name="write" id="writefrm">
                     <div><label htmlFor="title">제목</label>
                         <input type="text" name="title" id="title"
-                               defaultValue={board.title}
-                               onChange={e => handleInput(setTitle, e)}/></div>
+                               value={title}
+                               onChange={e => handleInput(setTitle, e)} /></div>
 
                     <div><label htmlFor="uid">작성자</label>
                         <input type="text" name="uid" id="uid"
-                               value={board.userid} readOnly /></div>
+                               value={userid} readOnly /></div>
 
                     <div><label htmlFor="contents" className="drgup">본문</label>
                         <textarea name="contents" id="contents"
-                                  rows="7" cols="55" defaultValue={board.contents} onChange={e => handleInput(setContents,e)} /></div>
+                                  onChange={e => handleInput(setContents, e)}
+                                  rows="7" cols="55" value={contents} /></div>
 
                     <div><label></label>
-                        <div className="g-recaptcha cap" data-sitekey={'6LdF4OskAAAAAKHR83Hmsj65DVQqjXqe0BiBwFsP'}></div>
+                        <div className="g-recaptcha cap" data-sitekey="6LdG4OskAAAAAMgMFOSHk_hTcglHx9m1Z9qBuR6y"></div>
                     </div>
 
                     <div><label></label>
@@ -62,6 +62,12 @@ export default function Update ({board}) {
                 </form>
             </div>
         </main>
-
     );
+
 }
+
+Update.getLayout = (page) => (
+    <Layout meta={{title:'Update'}}>
+        {page}
+    </Layout>
+)

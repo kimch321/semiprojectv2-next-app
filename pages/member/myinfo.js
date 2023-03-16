@@ -1,5 +1,7 @@
 import axios from "axios";
 import {getSession, signOut, useSession} from "next-auth/client";
+import Layout from "../../components/layout/Layout";
+import Logout from "./logout";
 
 export async function getServerSideProps(ctx) {
 
@@ -55,3 +57,9 @@ export default function MyInfo({member, session}) {
         </main>
     )
 }
+
+MyInfo.getLayout = (page) => (
+    <Layout meta={{title:'MyInfo'}}>
+        {page}
+    </Layout>
+)

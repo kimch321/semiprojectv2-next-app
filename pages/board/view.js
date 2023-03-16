@@ -1,64 +1,63 @@
-import axios from 'axios'
+import axios from "axios";
+import Layout from "../../components/layout/Layout";
 
-//http://localhost:3000/board/view?bno=1985
+
 export async function getServerSideProps(ctx) {
+    let bno = ctx.query.bno;
 
-    let bno = ctx.query.bno
-
-    let params = `bno=${bno}`
-    let url = `http://localhost:3000/api/board/view?${params}`
-
+    const url = `http://localhost:3000/api/board/view?bno=${bno}`;
     const res = await axios.get(url);
     const board = await res.data[0];
 
-    return {props:{board}}
+    return { props: {board} }
 }
 
-const View = ({board}) => {
+export default function View({board}) {
 
-    const newOne = () => {
-        location.href=`/board/write`
-    };
-    const goToList = () => {
-        location.href=`/board/list`
-    };
-    const updateOne = () => {
-        location.href=`/board/update?bno=${board.bno}`
-    };
+    const newOne = () => { location.href = '/board/write'; };
+    const go2list = () => { location.href = '/board/list'; };
+    const updateOne = () => { location.href = `/board/update?bno=${board.bno}`; };
     const deleteOne = () => {
-        if(confirm('정말 삭제하시겠습니까?')) location.href=`/api/board/delete?bno=${board.bno}`
+        if (confirm('정말 삭제하시겠습니까?'))
+            location.href = `/api/board/delete?bno=${board.bno}`;
     };
 
     return (
-            <main>
-                <h2>게시판 본문</h2>
-                <div id="view">
-                    <div><label>제목</label>
-                        <span>{board.title}</span></div>
+        <main>
+            <h2>게시판 본문</h2>
+            <div id="view">
 
-                    <div><label>작성자</label>
-                        <span>{board.userid}</span></div>
+                <div><label>제목</label>
+                    <span>{board.title}</span></div>
 
-                    <div><label>작성일</label>
-                        <span>{board.regdate}({board.views})</span></div>
+                <div><label>작성자</label>
+                    <span>{board.userid}</span></div>
 
-                    <div><label className="drgup">본 문</label>
-                        <span id="contents">{board.contents}</span></div>
+                <div><label>작성일</label>
+                    <span>{board.regdate} ({board.views})</span></div>
 
-                    <input type="hidden" id="bno" value="" />
-                    <input type="hidden" id="uid" value="" />
+                <div><label className="drgup">본 문</label>
+                    <span id="contents">{board.contents}</span></div>
 
-                    <div><label></label>
-                        <button type="button"
-                                onClick={newOne}>새글쓰기</button>
-                        <button type="button"
-                                onClick={goToList}>목록으로</button>
-                        <button type="button" id="updatebtn" onClick={updateOne}>수정하기</button>
-                        <button type="button" id="deletebtn" onClick={deleteOne}>삭제하기</button>
-                    </div>
+                <input type="hidden" id="bno" value={board.bno} />
+                <input type="hidden" id="uid" value={board.userid} />
+
+                <div><label></label>
+                    <button type="button" onClick={newOne}>새글쓰기</button>
+                    <button type="button" onClick={go2list}>목록으로</button>
+
+                    <button type="button" onClick={updateOne}>수정하기</button>
+                    <button type="button" onClick={deleteOne}>삭제하기</button>
                 </div>
-            </main>
-    )
+            </div>
+
+        </main>
+    );
+
 }
 
-export default View;
+View.getLayout = (page) => (
+    <Layout meta={{title:'View'}}>
+        {page}
+    </Layout>
+)

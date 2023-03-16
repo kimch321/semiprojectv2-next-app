@@ -1,21 +1,19 @@
 import '../styles/globals.css'
-import '../public/css/normalize.css'
-import '../public/css/main.css'
-import '../public/css/project2.css'
-import '../public/css/Myinfo.css'
+import React from "react";
+import {getSession} from "next-auth/client";
 import '../public/css/list.css'
 import '../public/css/view.css'
-import React from 'react';
-import {getSession} from "next-auth/client";
+import '../public/css/Myinfo.css'
 
 function App({ Component, pageProps, menu }) {
+    console.log('myapp -', menu);
 
-  const getLayout = Component.getLayout ?? (() => page);
-  return (
-      <React.Fragment>
-          {getLayout( <Component {...pageProps} /> )}
-      </React.Fragment>
-      );
+    const getLayout = Component.getLayout ?? ((page) => page);
+    return (
+        <React.Fragment>
+            {getLayout( <Component {...pageProps} /> )}
+        </React.Fragment>
+    );
 }
 
 // App.getInitialProps = async (ctx) => {
@@ -26,10 +24,10 @@ function App({ Component, pageProps, menu }) {
 //     let menu = '<a href="/member/login">로그인</a>';
 //     if (sess) menu = '<a href="/member/logout">로그아웃</a>';
 //
-//     appProps.menu =menu;
+//     appProps.menu = menu;
 //     console.log('app -', appProps.menu);
 //
-//     return {...appProps}
+//     return { ...appProps }
 // }
 
-export default App
+export default App;

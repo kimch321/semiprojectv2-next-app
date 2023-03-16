@@ -1,29 +1,29 @@
 import Header from "./Header";
 import Footer from "./Footer";
-import HEAD from 'next/head';
+import Head from "next/head";
 
-// localhost:3000/member/join (join 부분을 엔드포인트라고 한다. 이 부분이 children에 할당되게 횐다.)
-
+// localhost:3000/member/join
 
 const Layout = ({children, menu, meta}) => {
-    console.log('layout -',menu)
-
+    console.log('layout -', menu);
 
     const {title, description, icon} = meta;
-    return(
+    return (
         <>
-            <HEAD>
+            <Head>
+                <link rel="stylesheet" href="/css/normalize.css" />
+                <link rel="stylesheet" href="/css/main.css" />
+                <link rel="stylesheet" href="/css/project2.css" />
                 <title>{title}</title>
-                <link rel={"icon"} href={icon || '/favicon.ico'} />
-            </HEAD>
-            <div id={'wrapper'}>
-                <Header menu={menu} />
+                <link rel="icon" href={icon || '/favicon.ico'} />
+            </Head>
+            <div id="wrapper">
+                <Header menu={menu}/>
                 {children}
                 <Footer />
             </div>
         </>
-
-    )
+    );
 }
 
 export default Layout;
