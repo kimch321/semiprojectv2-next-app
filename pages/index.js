@@ -1,8 +1,15 @@
-const Home = () =>{
+import Layout from "../components/layout/Layout";
+
+export default function Home () {
   return(
       <main>
         <img src="/img/smile.png" alt="메인이미지" className={"logo"}/>
       </main>
   )
 }
-export default Home;
+
+Home.getLayout = (page) => (
+    <Layout meta={{title:'index'}}>
+        {page}
+    </Layout>
+)
