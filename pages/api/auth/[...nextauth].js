@@ -3,6 +3,7 @@
 
 import NextAuth from "next-auth";
 import Credentials from 'next-auth/providers/credentials';
+import axios from "axios";
 
 export default NextAuth({
     providers: [
@@ -18,24 +19,34 @@ export default NextAuth({
                 const userid = credentials.userid;
                 const passwd = credentials.passwd;
 
+                // 인증확인
+                let url = `http://localhost:3000/api/member/login${params}`
+                let params = `?userid=${userid}&passwd=${passwd}`
+                const res = await axios.get(url);
+                const result = await res.data;
+
+                console.log('nextauth -',await result)
+
                 // 인증에 성공해야만 로그인 허용
-                if (userid === 'abc123' && passwd === '987xyz')
-                return credentials;
+                if (await result.cnt > 0) {
+                    return credentials;
+                }
             }
         })
     ],
     pages: { // 인증에 사용자 정의 로그인 페이지 사용
-      signIn: '/member/login'
+        signIn: '/member/login'
     },
     callbacks: {
-        async jwt(token,user,account,profile,isNewUse) {
+        async jwt(token, user, account, profile, isNewUser) {
             console.log('jwt - ', user);
-            if(user?.userid) token.userid = user.userid;
+            if (user?.userid) token.userid = user.userid;
+
             return token;
         },
-        async session(session,userOrToken) {
-            console.log('session - ', userOrToken)
 
+        async session(session, userOrToken) {
+            console.log('session - ', userOrToken);
             session.user.userid = userOrToken.userid;
 
             return session;

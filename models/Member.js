@@ -1,9 +1,13 @@
 const mariadb = require('../models/MariaDB');
 
 let membersql = {
-    insertsql : ' insert into member (userid,passwd,name,email) values ( ?,?,?,?) ',
-    loginsql : ' select count(userid) cnt, name, email from member where userid = ? and passwd = ? ',
-    selectOne: ` select mno,userid,passwd,name,email, date_format(regdate, '%y-%m-%d %H:%i:%s') as regdate from member where userid = ? `
+    insertsql : ' insert into member (userid,passwd,name,email) ' +
+        ' values (?,?,?,?) ',
+    loginsql : ' select count(userid) cnt, name, email from member ' +
+        ' where userid = ? and passwd = ? ',
+    selectOne: ' select mno, userid, name, email, ' +
+        ` date_format(regdate, "%Y-%m-%d %H:%i:%s") regdate ` +
+        ' from member where userid = ? '
 }
 
 class Member {
@@ -31,7 +35,6 @@ class Member {
         } finally {
             await mariadb.closeConn(conn);
         }
-
         return result;
     }
 
@@ -39,15 +42,10 @@ class Member {
         let conn = null;
         let params = [uid, pwd];
         let result = -1;
+
         try {
             conn = await mariadb.makeConn();
-            result = await conn.query(
-                membersql.loginsql, params);
-
-            let {cnt} = result[0]
-            let cntToNumber = Number(cnt)
-            result[0].cnt = cntToNumber
-
+            result = await conn.query(membersql.loginsql, params);
         } catch (e) {
             console.log(e);
         } finally {
@@ -64,9 +62,7 @@ class Member {
 
         try {
             conn = await mariadb.makeConn();
-            result = await conn.query(
-                membersql.selectOne, params);
-
+            result = await conn.query(membersql.selectOne, params);
         } catch (e) {
             console.log(e);
         } finally {
@@ -76,6 +72,6 @@ class Member {
         return result;
     }
 
-}
+};
 
 module.exports = Member;

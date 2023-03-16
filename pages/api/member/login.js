@@ -1,19 +1,21 @@
-// /member/login?userid=test&passwd=test
-
-
 import Member from "../../../models/Member";
 
 export default async (req, res) => {
+    const [userid, passwd] = [req.query.userid, req.query.passwd];
 
-    let {userid, passwd} = req.query
+    try {
+        const member = new Member().login(userid, passwd)
+            .then(result => result);
 
-    try{
-        let loginData = new Member().login(userid,passwd).then(result=> result)
-        console.log(await loginData)
-        res.status(200).json(await loginData)
-    }catch(err){
-        console.log(err)
-        res.status(500).json(err)
+        const result = (await member)[0];
+        const data = { cnt: parseInt(await result.cnt),
+            name: await result.name, email: await result.email }
+        console.log('api login - ', data);
+
+        res.status(200).json(data);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(err);
     }
 
 }
