@@ -40,7 +40,7 @@ export default function Write() {
                                   rows="7" cols="55"></textarea></div>
 
                     <div><label></label>
-                        <div className="g-recaptcha cap" data-sitekey="6LdG4OskAAAAAMgMFOSHk_hTcglHx9m1Z9qBuR6y"></div>
+                        <div className="g-recaptcha cap" data-sitekey={process.env.SITE_KEY}></div>
                     </div>
 
                     <div><label></label>
